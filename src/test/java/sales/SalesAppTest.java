@@ -21,7 +21,7 @@ public class SalesAppTest {
 	@Before
 	public void setUp() throws Exception {
 		calendar = Calendar.getInstance();
-		salesApp = mock(SalesApp.class);
+		salesApp = spy(new SalesApp());
 		sales = mock(Sales.class);
 		salesDao = mock(SalesDao.class);
 		salesReportDao = mock(SalesReportDao.class);
