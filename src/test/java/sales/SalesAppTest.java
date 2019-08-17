@@ -105,4 +105,66 @@ public class SalesAppTest {
 
         assertEquals(1,filteredSalesReportDataList.size());
     }
+
+    @Test
+    public void should_empty_when_data_type_is_sales_activity_and_sales_is_confidential_and_not_supervisor() {
+        calendar.set(2018, Calendar.APRIL, 19);
+        effectiveFrom = calendar.getTime();
+        calendar.set(2019, Calendar.AUGUST, 15);
+        effectiveTo = calendar.getTime();
+        calendar.set(2019, Calendar.APRIL, 15);
+        today = calendar.getTime();
+        when(salesApp.getToday()).thenReturn(today);
+        when(salesDao.getSalesBySalesId("DUMMY")).thenReturn(sales);
+        when(sales.getEffectiveTo()).thenReturn(effectiveTo);
+        when(sales.getEffectiveFrom()).thenReturn(effectiveFrom);
+
+        SalesReportData salesReportData = mock(SalesReportData.class);
+        when(salesReportData.isConfidential()).thenReturn(true);
+        when(salesReportData.getType()).thenReturn("SalesActivity");
+        List<SalesReportData> salesReportDataList = new ArrayList<>();
+        salesReportDataList.add(salesReportData);
+        when(salesReportDao.getReportData(sales)).thenReturn(salesReportDataList);
+        List<SalesReportData> filteredSalesReportDataList = new ArrayList<>();
+        when(salesApp.getList()).thenReturn(filteredSalesReportDataList);
+
+        SalesActivityReport report = mock(SalesActivityReport.class);
+        when(report.toXml()).thenReturn("");
+        when(salesApp.generateReport(any(),any())).thenReturn(report);
+
+        salesApp.generateSalesActivityReport("DUMMY", 1, false, false);
+
+        assertEquals(0,filteredSalesReportDataList.size());
+    }
+
+    @Test
+    public void should_add_data_when_data_type_is_sales_activity_and_sales_is_confidential_and_is_supervisor() {
+        calendar.set(2018, Calendar.APRIL, 19);
+        effectiveFrom = calendar.getTime();
+        calendar.set(2019, Calendar.AUGUST, 15);
+        effectiveTo = calendar.getTime();
+        calendar.set(2019, Calendar.APRIL, 15);
+        today = calendar.getTime();
+        when(salesApp.getToday()).thenReturn(today);
+        when(salesDao.getSalesBySalesId("DUMMY")).thenReturn(sales);
+        when(sales.getEffectiveTo()).thenReturn(effectiveTo);
+        when(sales.getEffectiveFrom()).thenReturn(effectiveFrom);
+
+        SalesReportData salesReportData = mock(SalesReportData.class);
+        when(salesReportData.isConfidential()).thenReturn(true);
+        when(salesReportData.getType()).thenReturn("SalesActivity");
+        List<SalesReportData> salesReportDataList = new ArrayList<>();
+        salesReportDataList.add(salesReportData);
+        when(salesReportDao.getReportData(sales)).thenReturn(salesReportDataList);
+        List<SalesReportData> filteredSalesReportDataList = new ArrayList<>();
+        when(salesApp.getList()).thenReturn(filteredSalesReportDataList);
+
+        SalesActivityReport report = mock(SalesActivityReport.class);
+        when(report.toXml()).thenReturn("");
+        when(salesApp.generateReport(any(),any())).thenReturn(report);
+
+        salesApp.generateSalesActivityReport("DUMMY", 1, false, true);
+
+        assertEquals(1,filteredSalesReportDataList.size());
+    }
 }
