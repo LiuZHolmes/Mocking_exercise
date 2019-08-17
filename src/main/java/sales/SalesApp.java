@@ -42,7 +42,7 @@ public class SalesApp {
 		}
 		
 		List<SalesReportData> tempList = new ArrayList<SalesReportData>();
-		for (int i=0; i < reportDataList.size() || i < maxRow; i++) {
+		for (int i=0; i < reportDataList.size() && i < maxRow; i++) {
 			tempList.add(reportDataList.get(i));
 		}
 		filteredReportDataList = tempList;
