@@ -19,7 +19,7 @@ public class SalesApp {
         List<SalesReportData> filteredReportDataList = filterReportData(reportDataList, isSupervisor);
 
         List<String> headers = generateHeaders(isNatTrade);
-        SalesActivityReport report = this.generateReport(headers, reportDataList);
+        SalesActivityReport report = this.generateReport(headers, filteredReportDataList);
         EcmService ecmService = new EcmService();
         ecmService.uploadDocument(report.toXml());
     }
