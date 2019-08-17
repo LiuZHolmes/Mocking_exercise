@@ -13,10 +13,8 @@ public class SalesApp {
         if (salesId == null) return;
         Sales sales = salesDao.getSalesBySalesId(salesId);
         if (isTimeOutOfRange(sales.getEffectiveFrom(), sales.getEffectiveTo())) return;
-        List<SalesReportData> reportDataList = salesReportDao.getReportData(sales);
-        List<SalesReportData> filteredReportDataList = filterReportData(reportDataList, isSupervisor);
-        List<String> headers = generateHeaders(isNatTrade);
-        UploadReport(headers,filteredReportDataList);
+        UploadReport(generateHeaders(isNatTrade),
+                filterReportData(salesReportDao.getReportData(sales), isSupervisor));
     }
 
     SalesDao getSalesDao() {
@@ -55,7 +53,7 @@ public class SalesApp {
 
     }
 
-    private List<SalesReportData> filterReportData(List<SalesReportData> reportDataList,boolean isSupervisor) {
+    private List<SalesReportData> filterReportData(List<SalesReportData> reportDataList, boolean isSupervisor) {
         List<SalesReportData> filteredReportDataList = getList();
         for (SalesReportData data : reportDataList) {
             if ("SalesActivity".equalsIgnoreCase(data.getType())) {
@@ -76,6 +74,7 @@ public class SalesApp {
         EcmService ecmService = new EcmService();
         ecmService.uploadDocument(report.toXml());
     }
+
     SalesActivityReport generateReport(List<String> headers, List<SalesReportData> reportDataList) {
         // TODO Auto-generated method stub
         return null;
