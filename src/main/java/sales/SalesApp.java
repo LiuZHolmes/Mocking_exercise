@@ -11,36 +11,17 @@ public class SalesApp {
 
         SalesDao salesDao = getSalesDao();
         SalesReportDao salesReportDao = getSalesReportDao();
-
-        List<SalesReportData> filteredReportDataList = getList();
-
         if (salesId == null) return;
-
         Sales sales = salesDao.getSalesBySalesId(salesId);
-
         if (isTimeOutOfRange(sales.getEffectiveFrom(), sales.getEffectiveTo())) return;
-
         List<SalesReportData> reportDataList = salesReportDao.getReportData(sales);
 
-        for (SalesReportData data : reportDataList) {
-            if ("SalesActivity".equalsIgnoreCase(data.getType())) {
-                if (data.isConfidential()) {
-                    if (isSupervisor) {
-                        filteredReportDataList.add(data);
-                    }
-                } else {
-                    filteredReportDataList.add(data);
-                }
-            }
-        }
+        List<SalesReportData> filteredReportDataList = filterReportData(reportDataList, isSupervisor);
 
         List<String> headers = generateHeaders(isNatTrade);
-
         SalesActivityReport report = this.generateReport(headers, reportDataList);
-
         EcmService ecmService = new EcmService();
         ecmService.uploadDocument(report.toXml());
-
     }
 
     SalesDao getSalesDao() {
@@ -77,6 +58,22 @@ public class SalesApp {
         }
         return headers;
 
+    }
+
+    private List<SalesReportData> filterReportData(List<SalesReportData> reportDataList,boolean isSupervisor) {
+        List<SalesReportData> filteredReportDataList = getList();
+        for (SalesReportData data : reportDataList) {
+            if ("SalesActivity".equalsIgnoreCase(data.getType())) {
+                if (data.isConfidential()) {
+                    if (isSupervisor) {
+                        filteredReportDataList.add(data);
+                    }
+                } else {
+                    filteredReportDataList.add(data);
+                }
+            }
+        }
+        return filteredReportDataList;
     }
     SalesActivityReport generateReport(List<String> headers, List<SalesReportData> reportDataList) {
         // TODO Auto-generated method stub
