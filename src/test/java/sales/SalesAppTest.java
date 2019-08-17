@@ -38,8 +38,28 @@ public class SalesAppTest {
 
     @Test
     public void should_return_when_today_after_effective_to() {
+        calendar.set(2017, Calendar.AUGUST, 15);
+        effectiveFrom = calendar.getTime();
         calendar.set(2018, Calendar.APRIL, 19);
         effectiveTo = calendar.getTime();
+        calendar.set(2016, Calendar.AUGUST, 15);
+        today = calendar.getTime();
+        when(salesApp.getToday()).thenReturn(today);
+        when(salesDao.getSalesBySalesId("DUMMY")).thenReturn(sales);
+        when(sales.getEffectiveTo()).thenReturn(effectiveTo);
+        when(sales.getEffectiveFrom()).thenReturn(effectiveFrom);
+
+        salesApp.generateSalesActivityReport("DUMMY", 1000, false, false);
+
+        verify(salesReportDao, times(0)).getReportData(sales);
+    }
+
+    @Test
+    public void should_return_when_today_before_effective_from() {
+        calendar.set(2018, Calendar.APRIL, 19);
+        effectiveTo = calendar.getTime();
+        calendar.set(2019, Calendar.AUGUST, 15);
+        today = calendar.getTime();
         calendar.set(2019, Calendar.AUGUST, 15);
         today = calendar.getTime();
         when(salesApp.getToday()).thenReturn(today);
