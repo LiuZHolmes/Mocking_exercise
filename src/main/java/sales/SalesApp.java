@@ -9,8 +9,8 @@ public class SalesApp {
 
 	public void generateSalesActivityReport(String salesId, int maxRow, boolean isNatTrade, boolean isSupervisor) {
 		
-		SalesDao salesDao = new SalesDao();
-		SalesReportDao salesReportDao = new SalesReportDao();
+		SalesDao salesDao = getSalesDao();
+		SalesReportDao salesReportDao = getSalesReportDao();
 		List<String> headers = null;
 		
 		List<SalesReportData> filteredReportDataList = new ArrayList<SalesReportData>();
@@ -21,7 +21,7 @@ public class SalesApp {
 		
 		Sales sales = salesDao.getSalesBySalesId(salesId);
 		
-		Date today = new Date();
+		Date today = getToday();
 		if (today.after(sales.getEffectiveTo())
 				|| today.before(sales.getEffectiveFrom())){
 			return;
@@ -60,6 +60,17 @@ public class SalesApp {
 		
 	}
 
+	protected SalesDao getSalesDao() {
+		return new SalesDao();
+	}
+
+	protected SalesReportDao getSalesReportDao() {
+		return new SalesReportDao();
+	}
+
+	protected Date getToday() {
+		return new Date();
+	}
 	private SalesActivityReport generateReport(List<String> headers, List<SalesReportData> reportDataList) {
 		// TODO Auto-generated method stub
 		return null;
