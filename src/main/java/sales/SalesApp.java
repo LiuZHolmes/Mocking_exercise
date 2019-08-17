@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SalesApp {
 
@@ -55,17 +56,8 @@ public class SalesApp {
 
     private List<SalesReportData> filterReportData(List<SalesReportData> reportDataList, boolean isSupervisor) {
         List<SalesReportData> filteredReportDataList = getList();
-        for (SalesReportData data : reportDataList) {
-            if ("SalesActivity".equalsIgnoreCase(data.getType())) {
-                if (data.isConfidential()) {
-                    if (isSupervisor) {
-                        filteredReportDataList.add(data);
-                    }
-                } else {
-                    filteredReportDataList.add(data);
-                }
-            }
-        }
+        filteredReportDataList.addAll(reportDataList.stream().filter(x -> !x.isConfidential() || isSupervisor)
+                .collect(Collectors.toList()));
         return filteredReportDataList;
     }
 
