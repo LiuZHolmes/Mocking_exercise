@@ -31,7 +31,6 @@ public class SalesAppTest {
 
 	@Test
 	public void should_return_when_saleId_is_null() {
-		SalesApp salesApp = mock(SalesApp.class);
 		salesApp.generateSalesActivityReport(null, 1000, false, false);
 
 		verify(salesDao, times(0)).getSalesBySalesId(anyString());
