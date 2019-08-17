@@ -45,11 +45,8 @@ public class SalesApp {
 
     private List<String> generateHeaders(boolean isNatTrade) {
         List<String> headers = getHeaders();
-        if (isNatTrade) {
-            headers.addAll(Arrays.asList("Sales ID", "Sales Name", "Activity", "Time"));
-        } else {
-            headers.addAll(Arrays.asList("Sales ID", "Sales Name", "Activity", "Local Time"));
-        }
+        if (isNatTrade) headers.addAll(Arrays.asList("Sales ID", "Sales Name", "Activity", "Time"));
+        else headers.addAll(Arrays.asList("Sales ID", "Sales Name", "Activity", "Local Time"));
         return headers;
 
     }
