@@ -8,20 +8,15 @@ import java.util.List;
 public class SalesApp {
 
     public void generateSalesActivityReport(String salesId, int maxRow, boolean isNatTrade, boolean isSupervisor) {
-
         SalesDao salesDao = getSalesDao();
         SalesReportDao salesReportDao = getSalesReportDao();
         if (salesId == null) return;
         Sales sales = salesDao.getSalesBySalesId(salesId);
         if (isTimeOutOfRange(sales.getEffectiveFrom(), sales.getEffectiveTo())) return;
         List<SalesReportData> reportDataList = salesReportDao.getReportData(sales);
-
         List<SalesReportData> filteredReportDataList = filterReportData(reportDataList, isSupervisor);
-
         List<String> headers = generateHeaders(isNatTrade);
-        SalesActivityReport report = this.generateReport(headers, filteredReportDataList);
-        EcmService ecmService = new EcmService();
-        ecmService.uploadDocument(report.toXml());
+        UploadReport(headers,filteredReportDataList);
     }
 
     SalesDao getSalesDao() {
@@ -74,6 +69,12 @@ public class SalesApp {
             }
         }
         return filteredReportDataList;
+    }
+
+    private void UploadReport(List<String> headers, List<SalesReportData> filteredReportDataList) {
+        SalesActivityReport report = this.generateReport(headers, filteredReportDataList);
+        EcmService ecmService = new EcmService();
+        ecmService.uploadDocument(report.toXml());
     }
     SalesActivityReport generateReport(List<String> headers, List<SalesReportData> reportDataList) {
         // TODO Auto-generated method stub
