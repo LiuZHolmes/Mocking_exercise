@@ -1,11 +1,15 @@
 package sales;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class SalesAppTest {
@@ -37,7 +41,7 @@ public class SalesAppTest {
     }
 
     @Test
-    public void should_return_when_today_after_effective_to() {
+    public void should_return_when_today_before_effective_from() {
         calendar.set(2017, Calendar.AUGUST, 15);
         effectiveFrom = calendar.getTime();
         calendar.set(2018, Calendar.APRIL, 19);
@@ -55,12 +59,12 @@ public class SalesAppTest {
     }
 
     @Test
-    public void should_return_when_today_before_effective_from() {
+    public void should_return_when_today_after_effective_to() {
         calendar.set(2018, Calendar.APRIL, 19);
+        effectiveFrom = calendar.getTime();
+        calendar.set(2019, Calendar.AUGUST, 15);
         effectiveTo = calendar.getTime();
-        calendar.set(2019, Calendar.AUGUST, 15);
-        today = calendar.getTime();
-        calendar.set(2019, Calendar.AUGUST, 15);
+        calendar.set(2020, Calendar.AUGUST, 15);
         today = calendar.getTime();
         when(salesApp.getToday()).thenReturn(today);
         when(salesDao.getSalesBySalesId("DUMMY")).thenReturn(sales);
@@ -69,5 +73,36 @@ public class SalesAppTest {
         salesApp.generateSalesActivityReport("DUMMY", 1000, false, false);
 
         verify(salesReportDao, times(0)).getReportData(sales);
+    }
+
+    @Test
+    public void should_add_data_when_data_type_is_sales_activity_and_sales_not_confidential() {
+        calendar.set(2018, Calendar.APRIL, 19);
+        effectiveFrom = calendar.getTime();
+        calendar.set(2019, Calendar.AUGUST, 15);
+        effectiveTo = calendar.getTime();
+        calendar.set(2019, Calendar.APRIL, 15);
+        today = calendar.getTime();
+        when(salesApp.getToday()).thenReturn(today);
+        when(salesDao.getSalesBySalesId("DUMMY")).thenReturn(sales);
+        when(sales.getEffectiveTo()).thenReturn(effectiveTo);
+        when(sales.getEffectiveFrom()).thenReturn(effectiveFrom);
+
+        SalesReportData salesReportData = mock(SalesReportData.class);
+        when(salesReportData.isConfidential()).thenReturn(false);
+        when(salesReportData.getType()).thenReturn("SalesActivity");
+        List<SalesReportData> salesReportDataList = new ArrayList<>();
+        salesReportDataList.add(salesReportData);
+        when(salesReportDao.getReportData(sales)).thenReturn(salesReportDataList);
+        List<SalesReportData> filteredSalesReportDataList = new ArrayList<>();
+        when(salesApp.getList()).thenReturn(filteredSalesReportDataList);
+
+        SalesActivityReport report = mock(SalesActivityReport.class);
+        when(report.toXml()).thenReturn("");
+        when(salesApp.generateReport(any(),any())).thenReturn(report);
+
+        salesApp.generateSalesActivityReport("DUMMY", 1, false, false);
+
+        assertEquals(1,filteredSalesReportDataList.size());
     }
 }

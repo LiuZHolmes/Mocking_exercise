@@ -13,8 +13,8 @@ public class SalesApp {
 		SalesReportDao salesReportDao = getSalesReportDao();
 		List<String> headers = null;
 		
-		List<SalesReportData> filteredReportDataList = new ArrayList<SalesReportData>();
-		
+		List<SalesReportData> filteredReportDataList = getList();
+
 		if (salesId == null) {
 			return;
 		}
@@ -60,18 +60,22 @@ public class SalesApp {
 		
 	}
 
-	protected SalesDao getSalesDao() {
+	SalesDao getSalesDao() {
 		return new SalesDao();
 	}
 
-	protected SalesReportDao getSalesReportDao() {
+	SalesReportDao getSalesReportDao() {
 		return new SalesReportDao();
 	}
 
-	protected Date getToday() {
+	Date getToday() {
 		return new Date();
 	}
-	private SalesActivityReport generateReport(List<String> headers, List<SalesReportData> reportDataList) {
+
+	List<SalesReportData> getList() {
+		return new ArrayList<>();
+	}
+	SalesActivityReport generateReport(List<String> headers, List<SalesReportData> reportDataList) {
 		// TODO Auto-generated method stub
 		return null;
 	}
