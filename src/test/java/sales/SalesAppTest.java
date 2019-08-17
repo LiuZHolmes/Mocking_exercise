@@ -192,4 +192,29 @@ public class SalesAppTest {
 
         assertEquals("Local Time", headers.get(3));
     }
+
+    @Test
+    public void should_return_time_headers_when_is_nat_trade() {
+        calendar.set(2018, Calendar.APRIL, 19);
+        effectiveFrom = calendar.getTime();
+        calendar.set(2019, Calendar.AUGUST, 15);
+        effectiveTo = calendar.getTime();
+        calendar.set(2019, Calendar.APRIL, 15);
+        today = calendar.getTime();
+        when(salesApp.getToday()).thenReturn(today);
+        when(salesDao.getSalesBySalesId("DUMMY")).thenReturn(sales);
+        when(sales.getEffectiveTo()).thenReturn(effectiveTo);
+        when(sales.getEffectiveFrom()).thenReturn(effectiveFrom);
+
+        List<String> headers = new ArrayList<>();
+        when(salesApp.getHeaders()).thenReturn(headers);
+
+        SalesActivityReport report = mock(SalesActivityReport.class);
+        when(report.toXml()).thenReturn("");
+        when(salesApp.generateReport(any(), any())).thenReturn(report);
+
+        salesApp.generateSalesActivityReport("DUMMY", 1, true, true);
+
+        assertEquals("Time", headers.get(3));
+    }
 }
