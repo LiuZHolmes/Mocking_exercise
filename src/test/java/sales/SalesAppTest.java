@@ -99,11 +99,11 @@ public class SalesAppTest {
 
         SalesActivityReport report = mock(SalesActivityReport.class);
         when(report.toXml()).thenReturn("");
-        when(salesApp.generateReport(any(),any())).thenReturn(report);
+        when(salesApp.generateReport(any(), any())).thenReturn(report);
 
         salesApp.generateSalesActivityReport("DUMMY", 1, false, false);
 
-        assertEquals(1,filteredSalesReportDataList.size());
+        assertEquals(1, filteredSalesReportDataList.size());
     }
 
     @Test
@@ -130,11 +130,11 @@ public class SalesAppTest {
 
         SalesActivityReport report = mock(SalesActivityReport.class);
         when(report.toXml()).thenReturn("");
-        when(salesApp.generateReport(any(),any())).thenReturn(report);
+        when(salesApp.generateReport(any(), any())).thenReturn(report);
 
         salesApp.generateSalesActivityReport("DUMMY", 1, false, false);
 
-        assertEquals(0,filteredSalesReportDataList.size());
+        assertEquals(0, filteredSalesReportDataList.size());
     }
 
     @Test
@@ -161,10 +161,10 @@ public class SalesAppTest {
 
         SalesActivityReport report = mock(SalesActivityReport.class);
         when(report.toXml()).thenReturn("");
-        when(salesApp.generateReport(any(),any())).thenReturn(report);
+        when(salesApp.generateReport(any(), any())).thenReturn(report);
 
         salesApp.generateSalesActivityReport("DUMMY", 1, false, true);
 
-        assertEquals(1,filteredSalesReportDataList.size());
+        assertEquals(1, filteredSalesReportDataList.size());
     }
 }
