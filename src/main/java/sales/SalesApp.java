@@ -11,7 +11,6 @@ public class SalesApp {
 
         SalesDao salesDao = getSalesDao();
         SalesReportDao salesReportDao = getSalesReportDao();
-        List<String> headers = getHeaders();
 
         List<SalesReportData> filteredReportDataList = getList();
 
@@ -35,11 +34,7 @@ public class SalesApp {
             }
         }
 
-        if (isNatTrade) {
-            headers.addAll(Arrays.asList("Sales ID", "Sales Name", "Activity", "Time"));
-        } else {
-            headers.addAll(Arrays.asList("Sales ID", "Sales Name", "Activity", "Local Time"));
-        }
+        List<String> headers = generateHeaders(isNatTrade);
 
         SalesActivityReport report = this.generateReport(headers, reportDataList);
 
@@ -73,6 +68,16 @@ public class SalesApp {
         return today.after(end) || today.before(begin);
     }
 
+    private List<String> generateHeaders(boolean isNatTrade) {
+        List<String> headers = getHeaders();
+        if (isNatTrade) {
+            headers.addAll(Arrays.asList("Sales ID", "Sales Name", "Activity", "Time"));
+        } else {
+            headers.addAll(Arrays.asList("Sales ID", "Sales Name", "Activity", "Local Time"));
+        }
+        return headers;
+
+    }
     SalesActivityReport generateReport(List<String> headers, List<SalesReportData> reportDataList) {
         // TODO Auto-generated method stub
         return null;
